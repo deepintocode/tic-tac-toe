@@ -1,10 +1,22 @@
 ﻿var game = new Game();
 game.PlayGame();
+
 class Board
 {
     private readonly Shape[] _squares = new Shape[9];
     private int _filledSquares;
-
+    private static readonly Dictionary<Shape, string> ShapesToDraw = new()
+    {
+        {Shape.None, " "},
+        {Shape.X, "X"},
+        {Shape.O, "O"},
+    };
+    private static readonly Dictionary<Shape, BoardState> ShapeToWin = new()
+    {
+        { Shape.X, BoardState.XWin },
+        { Shape.O, BoardState.OWin }
+    };
+    
     public static void DrawDirectionsBoard()
     {
         Console.WriteLine("Please play the game using the numpad based on the sample board provided below.");
@@ -16,18 +28,11 @@ class Board
     }
     public void DrawBoard()
     {
-        Dictionary<Shape, string> shapesToDraw = new()
-        {
-            {Shape.None, " "},
-            {Shape.X, "X"},
-            {Shape.O, "O"},
-        };
-        
-        Console.WriteLine($" {shapesToDraw[_squares[6]]} | {shapesToDraw[_squares[7]]} | {shapesToDraw[_squares[8]]} ");
+        Console.WriteLine($" {ShapesToDraw[_squares[6]]} | {ShapesToDraw[_squares[7]]} | {ShapesToDraw[_squares[8]]} ");
         Console.WriteLine("---+---+---");
-        Console.WriteLine($" {shapesToDraw[_squares[3]]} | {shapesToDraw[_squares[4]]} | {shapesToDraw[_squares[5]]} ");
+        Console.WriteLine($" {ShapesToDraw[_squares[3]]} | {ShapesToDraw[_squares[4]]} | {ShapesToDraw[_squares[5]]} ");
         Console.WriteLine("---+---+---");
-        Console.WriteLine($" {shapesToDraw[_squares[0]]} | {shapesToDraw[_squares[1]]} | {shapesToDraw[_squares[2]]} ");
+        Console.WriteLine($" {ShapesToDraw[_squares[0]]} | {ShapesToDraw[_squares[1]]} | {ShapesToDraw[_squares[2]]} ");
     }
 
     public void FillSquare(int square, Shape shape)
@@ -43,20 +48,14 @@ class Board
     
     public BoardState CheckBoard(Shape shape)
     {
-        Dictionary<Shape, BoardState> shapeToWin = new()
-        {
-            { Shape.X, BoardState.XWin },
-            { Shape.O, BoardState.OWin }
-        };
-        
-        if (_squares[0] == shape && _squares[1] == shape && _squares[2] == shape) return shapeToWin[shape];
-        if (_squares[3] == shape && _squares[4] == shape && _squares[5] == shape) return shapeToWin[shape];
-        if (_squares[6] == shape && _squares[7] == shape && _squares[8] == shape) return shapeToWin[shape];
-        if (_squares[0] == shape && _squares[3] == shape && _squares[6] == shape) return shapeToWin[shape];
-        if (_squares[1] == shape && _squares[4] == shape && _squares[7] == shape) return shapeToWin[shape];
-        if (_squares[2] == shape && _squares[5] == shape && _squares[8] == shape) return shapeToWin[shape];
-        if (_squares[0] == shape && _squares[4] == shape && _squares[8] == shape) return shapeToWin[shape];
-        if (_squares[6] == shape && _squares[4] == shape && _squares[2] == shape) return shapeToWin[shape];
+        if (_squares[0] == shape && _squares[1] == shape && _squares[2] == shape) return ShapeToWin[shape];
+        if (_squares[3] == shape && _squares[4] == shape && _squares[5] == shape) return ShapeToWin[shape];
+        if (_squares[6] == shape && _squares[7] == shape && _squares[8] == shape) return ShapeToWin[shape];
+        if (_squares[0] == shape && _squares[3] == shape && _squares[6] == shape) return ShapeToWin[shape];
+        if (_squares[1] == shape && _squares[4] == shape && _squares[7] == shape) return ShapeToWin[shape];
+        if (_squares[2] == shape && _squares[5] == shape && _squares[8] == shape) return ShapeToWin[shape];
+        if (_squares[0] == shape && _squares[4] == shape && _squares[8] == shape) return ShapeToWin[shape];
+        if (_squares[6] == shape && _squares[4] == shape && _squares[2] == shape) return ShapeToWin[shape];
         
         return _filledSquares < 9 ? BoardState.Ongoing : BoardState.Draw;
     }
